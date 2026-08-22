@@ -1,0 +1,59 @@
+generated: '2026-08-22'
+method: probed
+source: live responses from https://group14.technology/wp-json/ + the site's own REST index
+description: >-
+  Group14 Technologies publishes no developer program, no API keys, no OAuth, no signup and no
+  documentation of any kind for machine access. Everything below was read off live responses on
+  2026-08-22, not from a docs page, because there is no docs page.
+summary:
+  public_read: true
+  credential_required_for_read: false
+  credential_issuance_path: none
+  registered_schemes: []
+  note: >-
+    The site's own REST index reports `"authentication": []` — WordPress core registers no
+    authentication scheme on this host beyond the built-in cookie and application-password paths.
+schemes:
+- name: anonymous
+  type: none
+  applies_to: >-
+    Every public read operation in openapi/ — resources, resource categories, pages, posts,
+    categories, tags, job openings, job departments, job locations, locations, media, videos, video
+    categories, search, types, taxonomies, statuses and the API index.
+  detail: >-
+    No key, token, header or account. Requests succeed unauthenticated and the collections answer
+    `Allow: GET` without credentials.
+  evidence: 'GET https://group14.technology/wp-json/wp/v2/resource?per_page=1 -> 200, X-WP-Total: 169'
+- name: wordpress-cookie-nonce
+  type: cookie
+  applies_to: The wp-admin surface and every write method on the same routes.
+  detail: >-
+    Logged-in WordPress session cookie plus an X-WP-Nonce header. `access-control-allow-headers` on
+    every response advertises `Authorization, X-WP-Nonce, Content-Disposition, Content-MD5,
+    Content-Type`. There is no public path to a Group14 WordPress account.
+  public_issuance: false
+- name: wordpress-application-password
+  type: http-basic
+  applies_to: Programmatic writes and the gated routes below.
+  detail: >-
+    WordPress application passwords over TLS (HTTP Basic). Issued only from the wp-admin profile
+    screen of an existing account, so there is no third-party issuance path.
+  public_issuance: false
+gated_surfaces:
+- {path: /wp-json/wp/v2/users, status: 401, code: rest_forbidden, note: 'Author records are not exposed anonymously on this host — unusual, and a deliberate hardening.'}
+- {path: /wp-json/mcp/mcp-adapter-default-server, status: 401, code: rest_forbidden, note: 'The MCP Adapter endpoint. tools/list is unreadable without authentication.'}
+- {path: /wp-json/wp-abilities/v1/abilities, status: 401, code: rest_forbidden, note: The Abilities API backing the MCP adapter.}
+- {path: /wp-json/yoast/v1/*, status: 401, code: rest_forbidden, note: Yoast SEO plugin administration routes.}
+- {path: /wp-json/wordfence/v1/*, status: 401, code: rest_forbidden, note: 'Wordfence security plugin routes — present, gated.'}
+oauth:
+  supported: false
+  discovery:
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  note: No OAuth or OIDC anywhere on this host. scopes/ is deliberately not written — there is no scope surface to record.
+transport:
+  tls: TLSv1.3
+  hsts: true
+  hsts_max_age: 63072000
+  note: See security/group14-technologies-domain-security.yml.

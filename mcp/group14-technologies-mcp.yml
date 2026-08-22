@@ -1,0 +1,40 @@
+generated: '2026-08-22'
+method: probed
+source: https://group14.technology/wp-json/mcp
+status: gated
+deployment:
+  mode: remote
+  endpoint: https://group14.technology/wp-json/mcp/mcp-adapter-default-server
+  auth: unknown
+  verified: probed
+description: >-
+  Group14 Technologies does not advertise, document or market an MCP server. What exists is a
+  WordPress MCP Adapter endpoint registered on the corporate website. The `mcp` namespace is
+  declared in the site's own REST index at https://group14.technology/wp-json/, and
+  GET /wp-json/mcp returns a 200 route document listing /mcp/mcp-adapter-default-server with
+  methods POST, GET and DELETE. The endpoint therefore genuinely exists and is served by the
+  provider — it answers 401, not 404.
+  It is site-administration infrastructure, not a customer-facing agent surface.
+evidence:
+- {method: GET, url: 'https://group14.technology/wp-json/mcp', status: 200, note: 'Route document; declares /mcp/mcp-adapter-default-server with POST, GET, DELETE.'}
+- {method: POST, url: 'https://group14.technology/wp-json/mcp/mcp-adapter-default-server', body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}', status: 401, response: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'}
+- {method: GET, url: 'https://group14.technology/wp-json/mcp/mcp-adapter-default-server', status: 401, response: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'}
+- {method: GET, url: 'https://group14.technology/wp-json/wp-abilities/v1/abilities', status: 401, note: 'The WordPress Abilities API that backs the MCP adapter is gated the same way.'}
+- {method: GET, url: 'https://group14.technology/.well-known/oauth-authorization-server', status: 404, note: No OAuth metadata is published; there is no anonymous credential-issuance path.}
+- {method: GET, url: 'https://group14.technology/.well-known/oauth-protected-resource', status: 404, note: null}
+tools:
+- []
+tools_note: >-
+  NO TOOLS ARE RECORDED. tools/list returns 401 anonymously, so the real tool set and its
+  inputSchemas cannot be read without authenticated introspection. Nothing is inferred, guessed or
+  derived into this list: the WordPress MCP Adapter's default server exposes whatever abilities the
+  site's installed plugins register, which is site-specific and unknowable from outside. Any tool
+  list here would be fabrication.
+access:
+  public: false
+  credential_path: none published
+  detail: >-
+    Authentication is WordPress-native — a logged-in admin cookie plus X-WP-Nonce, or a WordPress
+    application password issued from the wp-admin profile screen. Group14 publishes no signup, no
+    developer program and no way for a third party to obtain either. There is no public agent
+    access to this endpoint.

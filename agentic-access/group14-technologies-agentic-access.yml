@@ -1,0 +1,66 @@
+generated: '2026-08-22'
+method: generated
+source: openapi/ (7 specs, 31 operations) + probed access behaviour on https://group14.technology
+description: >-
+  Recommended x-agentic-access contract for the Group14 Technologies surface. Group14 publishes no
+  agent policy, so this is API Evangelist's classification of what an autonomous agent may safely do
+  here — generated from the derived operations, not asserted on the provider's behalf.
+posture:
+  agent_readable: true
+  agent_writable: false
+  credential_required: false
+  robots_permits_crawl: true
+  robots_evidence: 'https://group14.technology/robots.txt returns "User-agent: * / Disallow:" — nothing is disallowed.'
+  llms_txt_published: true
+  llms_txt_evidence: 'https://group14.technology/llms.txt (Yoast SEO v28.2 generated) — saved to llms/'
+  paid_agent_access: false
+  cloaking_observed: false
+  cloaking_note: >-
+    Anonymous curl with a default agent User-Agent and with a browser User-Agent returned identical
+    status codes on every probed path. No agent-specific gate, challenge or differential payload was
+    observed.
+default_policy:
+  action_class: read
+  consequence: none
+  scope: public-content
+  token: none
+  escalation: not-possible
+  detail: >-
+    Every operation in openapi/ is an anonymous GET over published marketing content. There is no
+    action an agent can take here that spends money, sends a message, changes state, or exposes
+    personal data. The correct default is: read freely, cache for the stated 600 seconds, and never
+    attempt a write.
+operations:
+- class: read
+  consequence: none
+  reversibility: na
+  operations: [listResources, getResource, listResourceCategories, getResourceCategory, listPages, getPage, listPosts, getPost, listCategories, getCategory, listTags, getTag, listJobOpenings, getJobOpening, listJobDepartments, getJobDepartment, listJobLocations, getJobLocation, listLocations, getLocation, listMediaItems, getMediaItem, listVideos, getVideo, listVideoCategories, getVideoCategory, listSearchResults, listContentTypes, listTaxonomies, listStatuses, getApiIndex]
+  guidance: >-
+    Safe to call unattended. Use `_fields` to request only what is needed, honour X-WP-TotalPages
+    rather than probing past the end, and pace against the 600-second cache-control window.
+forbidden:
+- surface: /wp-json/mcp/mcp-adapter-default-server
+  reason: >-
+    Registered but authentication-gated (401 rest_forbidden). Group14 publishes no credential path.
+    An agent must treat this as closed and must not retry, brute-force, or attempt to obtain
+    credentials.
+- surface: /wp-json/wp-abilities/v1/*
+  reason: Gated administration surface (401).
+- surface: /wp-json/wp/v2/users
+  reason: 'Gated (401). Author records are deliberately not exposed on this host — respect that.'
+- surface: 'every POST / PUT / PATCH / DELETE method declared on wp/v2 routes'
+  reason: >-
+    Write methods exist in the WordPress route table but require credentials with no public issuance
+    path. They are the site's own CMS controls, not an API product. An agent must never attempt them.
+escalation:
+  path: none
+  detail: >-
+    There is no way for an agent, or the human behind it, to obtain elevated access. There is no
+    developer signup, no API key, no OAuth, and no support channel for machine access. Commercial
+    contact at https://group14.technology/contact-us/ is for battery material enquiries.
+data_sensitivity:
+  pii: false
+  detail: >-
+    The public surface carries published marketing content, job postings and facility descriptions.
+    No customer, employee or personal data is exposed anonymously; the users route that would carry
+    author records returns 401.

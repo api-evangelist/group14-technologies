@@ -1,0 +1,670 @@
+openapi: 3.1.0
+info:
+  title: Group14 Technologies Resources API
+  version: wp/v2
+  description: Public, unauthenticated read access to the Group14 Technologies resource library behind group14.technology
+    — press releases, news coverage, blog posts and whitepapers about SCC55 silicon battery material and the BAM
+    factory network — plus the resource-category taxonomy that classifies them. Verified live at 169 published resources
+    across 5 categories on 2026-08-22. Group14 publishes no API documentation; this surface was discovered by probe
+    and derived from the server's own OPTIONS schema documents.
+  contact:
+    name: Group14 Technologies
+    url: https://group14.technology/contact/
+  x-derived-from: https://group14.technology/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-22'
+  x-api-evangelist-note: Third-party profile. Group14 Technologies is a silicon battery materials manufacturer and
+    publishes no developer program, no API documentation and no SDKs. This document describes the anonymously readable
+    WordPress REST content API behind group14.technology. Every path, parameter and schema here was read from the
+    server's own published OPTIONS documents on 2026-08-22 — nothing is invented.
+servers:
+- url: https://group14.technology/wp-json
+  description: Group14 Technologies WordPress REST API
+tags:
+- name: Resources
+  description: Press releases, news, blog posts and whitepapers published by Group14 Technologies.
+- name: Taxonomy
+  description: The resource-category vocabulary (News, Press Releases, Blog, Whitepapers) used to classify resources.
+paths:
+  /wp/v2/resource:
+    get:
+      operationId: listResources
+      summary: List resource records
+      description: 'Anonymous, read-only listing of the `resource` collection on group14.technology. Verified live
+        on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Resources
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: after
+        in: query
+        description: Limit response to posts published after a given ISO8601 compliant date.
+        schema:
+          type: string
+          format: date-time
+      - name: modified_after
+        in: query
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+        schema:
+          type: string
+          format: date-time
+      - name: author
+        in: query
+        description: Limit result set to posts assigned to specific authors.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: author_exclude
+        in: query
+        description: Ensure result set excludes posts assigned to specific authors.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: before
+        in: query
+        description: Limit response to posts published before a given ISO8601 compliant date.
+        schema:
+          type: string
+          format: date-time
+      - name: modified_before
+        in: query
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+        schema:
+          type: string
+          format: date-time
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: search_semantics
+        in: query
+        description: How to interpret the search input.
+        schema:
+          type: string
+          enum:
+          - exact
+      - name: offset
+        in: query
+        description: Offset the result set by a specific number of items.
+        schema:
+          type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      - name: orderby
+        in: query
+        description: Sort collection by post attribute.
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          default: date
+      - name: parent
+        in: query
+        description: Limit result set to items with particular parent IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: parent_exclude
+        in: query
+        description: Limit result set to all items except those of a particular parent ID.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: search_columns
+        in: query
+        description: Array of column names to be searched.
+        schema:
+          type: array
+          default: []
+          items:
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+            type: string
+      - name: slug
+        in: query
+        description: Limit result set to posts with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: status
+        in: query
+        description: Limit result set to posts assigned one or more statuses.
+        schema:
+          type: array
+          default: publish
+          items:
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - acf-disabled
+            - dp-rewrite-republish
+            - email_sent
+            - email_failed
+            - email_scheduled
+            - any
+            type: string
+      - name: tax_relation
+        in: query
+        description: Limit result set based on relationship between multiple taxonomies.
+        schema:
+          type: string
+          enum:
+          - AND
+          - OR
+      - name: resource-category
+        in: query
+        description: Limit result set to items with specific terms assigned in the resource-category taxonomy.
+        schema:
+          type: object
+      - name: resource-category_exclude
+        in: query
+        description: Limit result set to items except those with specific terms assigned in the resource-category
+          taxonomy.
+        schema:
+          type: object
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of resource records.
+          headers:
+            X-WP-Total: &id003
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages: &id004
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &id001
+                  $ref: '#/components/schemas/Resource'
+        '400': &id005
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument
+            (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401': &id002
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or
+            route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/resource/{id}:
+    get:
+      operationId: getResource
+      summary: Retrieve one resource record
+      description: Anonymous, read-only retrieval of a single `resource` record by its numeric WordPress id.
+      tags:
+      - Resources
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the resource.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers
+          may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested resource record.
+          content:
+            application/json:
+              schema: *id001
+        '401': *id002
+        '404': &id007
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/resource-category:
+    get:
+      operationId: listResourceCategories
+      summary: List resource category records
+      description: 'Anonymous, read-only listing of the `resource-category` collection on group14.technology. Verified
+        live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of resource category records.
+          headers:
+            X-WP-Total: *id003
+            X-WP-TotalPages: *id004
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &id006
+                  $ref: '#/components/schemas/ResourceCategory'
+        '400': *id005
+        '401': *id002
+  /wp/v2/resource-category/{id}:
+    get:
+      operationId: getResourceCategory
+      summary: Retrieve one resource category record
+      description: Anonymous, read-only retrieval of a single `resource-category` record by its numeric WordPress
+        id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the resource category.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers
+          may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested resource category record.
+          content:
+            application/json:
+              schema: *id006
+        '401': *id002
+        '404': *id007
+components:
+  schemas:
+    Error:
+      type: object
+      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          description: Additional context.
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+      required:
+      - code
+      - message
+    Resource:
+      type: object
+      title: resource
+      properties:
+        date:
+          description: The date the post was published, in the site's timezone.
+          type: string
+          format: date-time
+        date_gmt:
+          description: The date the post was published, as GMT.
+          type: string
+          format: date-time
+        guid:
+          description: The globally unique identifier for the post.
+          type: object
+          properties:
+            raw:
+              description: GUID for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: GUID for the post, transformed for display.
+              type: string
+        id:
+          description: Unique identifier for the post.
+          type: integer
+        link:
+          description: URL to the post.
+          type: string
+          format: uri
+        modified:
+          description: The date the post was last modified, in the site's timezone.
+          type: string
+          format: date-time
+        modified_gmt:
+          description: The date the post was last modified, as GMT.
+          type: string
+          format: date-time
+        slug:
+          description: An alphanumeric identifier for the post unique to its type.
+          type: string
+        status:
+          description: A named status for the post.
+          type: string
+          enum:
+          - publish
+          - future
+          - draft
+          - pending
+          - private
+          - acf-disabled
+        type:
+          description: Type of post.
+          type: string
+        password:
+          description: A password to protect access to the content and excerpt.
+          type: string
+        permalink_template:
+          description: Permalink template for the post.
+          type: string
+        generated_slug:
+          description: Slug automatically generated from the post title.
+          type: string
+        class_list:
+          description: An array of the class names for the post container element.
+          type: array
+          items:
+            type: string
+        parent:
+          description: The ID for the parent of the post.
+          type: integer
+        title:
+          description: The title for the post.
+          type: object
+          properties:
+            raw:
+              description: Title for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML title for the post, transformed for display.
+              type: string
+        content:
+          description: The content for the post.
+          type: object
+          properties:
+            raw:
+              description: Content for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML content for the post, transformed for display.
+              type: string
+            block_version:
+              description: Version of the content block format used by the post.
+              type: integer
+            protected:
+              description: Whether the content is protected with a password.
+              type: boolean
+        author:
+          description: The ID for the author of the post.
+          type: integer
+        excerpt:
+          description: The excerpt for the post.
+          type: object
+          properties:
+            raw:
+              description: Excerpt for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML excerpt for the post, transformed for display.
+              type: string
+            protected:
+              description: Whether the excerpt is protected with a password.
+              type: boolean
+        featured_media:
+          description: The ID of the featured media for the post.
+          type: integer
+        template:
+          description: The theme file to use to display the post.
+          type: string
+        resource-category:
+          description: The terms assigned to the post in the resource-category taxonomy.
+          type: array
+          items:
+            type: integer
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+    ResourceCategory:
+      type: object
+      title: resource-category
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - resource-category
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}

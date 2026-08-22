@@ -1,0 +1,39 @@
+generated: '2026-08-22'
+method: probed
+source: live response headers from https://group14.technology/wp-json/wp/v2/resource
+limit_count: 0
+published: false
+detail: >-
+  Group14 Technologies publishes no rate limits for this surface, because it publishes no developer
+  documentation at all. Live responses were inspected header by header on 2026-08-22 and carry no
+  rate-limit signal of any kind.
+headers_observed: []
+headers_absent:
+- X-RateLimit-Limit
+- X-RateLimit-Remaining
+- X-RateLimit-Reset
+- RateLimit-Limit
+- RateLimit-Remaining
+- RateLimit-Reset
+- RateLimit-Policy
+- Retry-After
+exhaustion_status: unknown
+edge_protection:
+  cdn: cloudflare
+  origin: WP Engine
+  evidence: 'server: cloudflare; x-cacheable: SHORT; x-cache: MISS; x-cache-group: normal'
+  detail: >-
+    Whatever throttling exists is Cloudflare and WP Engine edge policy configured by the site
+    operator, not an API contract. It is invisible to a caller until it fires, at which point the
+    response will be an HTML challenge or block page rather than the WordPress JSON envelope. This
+    is the practical risk for an agent consuming this surface.
+caching_signals:
+  cache_control: 'max-age=600, must-revalidate'
+  detail: >-
+    A 10-minute cache window is the only quantitative pacing signal published anywhere on this
+    surface. Respect it: it is the closest thing to a stated request budget, and the site's own
+    robots.txt carries a (commented-out) `Crawl-delay: 10`.
+recommendation: >-
+  Treat this as an unmetered but unguaranteed surface. Poll no faster than the 600-second
+  cache-control window, use `_fields` to keep payloads small, and branch on content-type before
+  parsing so an edge challenge page is not mistaken for an API error.

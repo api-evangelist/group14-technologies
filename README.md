@@ -64,5 +64,9 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Group14 Technologies is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/group14-technologies_stock/
+Group14 Technologies is a battery materials manufacturer headquartered in Woodinville, Washington, producing SCC55, a silicon-carbon composite anode material for lithium-ion cells. It is a materials manufacturer rather than a software vendor: it publishes no developer program, no API documentation, no SDKs and no pricing for machine access.
+
+The only machine-readable interfaces it exposes are the anonymously readable WordPress REST content API behind `group14.technology` — captured here as seven derived OpenAPI documents covering 31 read-only operations across resources, pages, careers, locations, media, search and discovery — and a WordPress MCP Adapter endpoint on the same host that is registered but returns `401` to every anonymous call. Group14 does publish an `llms.txt` (saved verbatim) and holds an ISO 9001 manufacturing quality certification.
+
+- https://group14.technology/
+- https://forgeglobal.com/group14-technologies_stock/ (secondary-market listing; the harvest source, not the company's site)

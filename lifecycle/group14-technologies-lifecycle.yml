@@ -1,0 +1,60 @@
+generated: '2026-08-22'
+method: probed
+source: live probes of group14.technology + the site's own REST route index
+description: >-
+  Group14 Technologies publishes no versioning policy, no deprecation policy, no SLA, no status page
+  and no changelog for the machine-readable surface behind group14.technology. This artifact records
+  those absences honestly rather than omitting them, and records what the surface's version
+  behaviour actually is.
+versioning:
+  scheme: namespace-in-path
+  current_version: wp/v2
+  published_policy: false
+  detail: >-
+    The version is the WordPress REST namespace and is inherited from WordPress core, not chosen or
+    governed by Group14. 21 namespaces are registered on this host at capture. A WordPress core
+    upgrade is the only thing that would move it, and the site operator does not announce those.
+  namespaces_at_capture: 21
+  routes_at_capture: 455
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: >-
+    No Sunset or Deprecation response header was observed on any probed route, and no deprecation
+    policy page exists. NO `Deprecation` pointer is emitted in apis.yml.
+  deprecated_operations: []
+status_page:
+  published: false
+  probed:
+  - {url: 'https://status.group14.technology/', dns: NXDOMAIN}
+  - {url: 'https://group14.technology/status/', status: 404}
+  detail: >-
+    There is no status page for this surface. NO `StatusPage` pointer is emitted in apis.yml,
+    because a pointer would assert the provider operates one.
+sla:
+  published: false
+  detail: No SLA, no uptime commitment, no support commitment for machine access. The API is an unadvertised by-product of the corporate website.
+changelog:
+  published: false
+  detail: >-
+    No dated changelog for the API surface. The company does publish dated corporate news and press
+    releases through the resource library (169 records, listResources, ordered by date), which is the
+    closest thing to a change feed and is editorial rather than technical. No `ChangeLog` pointer is
+    emitted.
+support:
+  api_support_channel: none
+  detail: >-
+    https://group14.technology/contact-us/ is a corporate contact form for commercial and press
+    enquiries. There is no developer support channel, forum, or community. NO `Support` pointer is
+    emitted for a developer channel that does not exist.
+stability_assessment:
+  grade: unmanaged
+  detail: >-
+    This is a content API behind a marketing site. Content types (`resource`, `location`,
+    `job-opening`, `video`) and their ACF field sets can change without notice whenever the site is
+    redesigned, and taxonomy term ids are database identifiers, not stable public keys. A consumer
+    should resolve by `slug` rather than by numeric `id`, and should expect the shape to drift
+    silently. That is a real finding about consuming this surface, not a criticism of the company —
+    it never offered it as a product.

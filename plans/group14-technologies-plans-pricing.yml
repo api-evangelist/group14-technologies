@@ -1,0 +1,26 @@
+generated: '2026-08-22'
+method: searched
+source: https://group14.technology/
+plan_count: 0
+published: false
+detail: >-
+  Group14 Technologies publishes no plans, tiers, quotas or pricing for API access, and there is
+  nothing to be gated behind: the machine-readable surface is the anonymously readable WordPress
+  content API behind its marketing site, free and unmetered by default. There is no signup, no
+  developer account, no free tier and no enterprise contact form for machine access — because there
+  is no product. The company's commercial motion is B2B supply of SCC55 silicon battery material to
+  cell manufacturers, quoted privately; https://group14.technology/contact-us/ is a corporate
+  enquiry form, not an API sales gate.
+pages_probed:
+- {url: 'https://group14.technology/pricing/', status: 404}
+- {url: 'https://group14.technology/plans/', status: 404}
+- {url: 'https://group14.technology/developers/', status: 404}
+- {url: 'https://group14.technology/contact-us/', status: 200, note: Corporate contact form. Not an API sales gate.}
+plans: []
+access_model:
+  pricing: none
+  onboarding: none
+  trial: false
+  try_now: true
+  public: true
+  label: Public read-only content API, no signup

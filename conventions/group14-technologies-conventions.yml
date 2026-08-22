@@ -1,0 +1,106 @@
+generated: '2026-08-22'
+method: probed
+source: live responses from https://group14.technology/wp-json/ + openapi/ derived parameters
+description: >-
+  Cross-cutting request/response semantics for the WordPress REST content API behind
+  group14.technology. Group14 publishes no API documentation, so every convention below was read
+  off live responses and the server's own OPTIONS schema documents on 2026-08-22, or is the
+  documented WordPress core behaviour this surface inherits.
+authentication:
+  style: none for reads
+  detail: >-
+    Anonymous read. Writes require a WordPress cookie + X-WP-Nonce or an application password, and
+    neither has a public issuance path.
+  artifact: authentication/group14-technologies-authentication.yml
+idempotency:
+  supported: false
+  status: na
+  idempotency_key_header: null
+  detail: >-
+    There is no idempotency contract, and no public write surface for one to apply to. No
+    Idempotency-Key header, parameter or replay window is accepted or documented. The public
+    operations are all GET and are idempotent by HTTP method semantics alone, which is not the same
+    thing as an idempotency guarantee. NO `Idempotency` pointer is emitted in apis.yml.
+pagination:
+  style: page-number, with an offset alternative
+  params:
+    page: 1-based page number. Default 1, minimum 1.
+    per_page: 'Records per page. Default 10, minimum 1, maximum 100 — exceeding it returns 400 rest_invalid_param.'
+    offset: Alternative to page; skip N records.
+    order: asc or desc.
+    orderby: 'Sort field; varies per resource (date, id, include, title, slug, modified, relevance).'
+  response_fields:
+    X-WP-Total: Total records in the unpaginated collection.
+    X-WP-TotalPages: Total pages available at the requested per_page.
+    Link: 'RFC 8288 rel="next" / rel="prev" cursor links.'
+  evidence: 'GET /wp/v2/resource?per_page=1 -> X-WP-Total: 169, X-WP-TotalPages: 169, Link: <...page=2>; rel="next"'
+field_selection:
+  supported: true
+  param: _fields
+  detail: 'Comma-separated allowlist of top-level fields, e.g. `?_fields=id,slug,link,title`. Reduces payload substantially.'
+  embedding:
+    param: _embed
+    detail: 'Inlines linked resources (featured media, terms, author) into `_embedded` instead of requiring follow-up requests.'
+  context:
+    param: context
+    values: [view, embed]
+    detail: '`edit` is declared in the schema but returns 401 anonymously. `embed` returns the minimal record.'
+metadata:
+  detail: >-
+    Custom fields are exposed through an `acf` object (Advanced Custom Fields) on the resource,
+    location, job-opening and video types, and through `meta` on taxonomy terms. The server declares
+    both as free-form objects with no advertised properties, so their contents are not enumerated
+    here.
+request_id_tracing:
+  supported: false
+  detail: No request-id, trace-id or correlation header is returned. Responses carry Cloudflare `cf-ray` and WP Engine `x-cache` / `x-cache-group` only, which are infrastructure identifiers, not API trace ids.
+versioning:
+  scheme: namespace-in-path
+  current: wp/v2
+  detail: >-
+    Versioning is the WordPress REST namespace, not a Group14 decision. 21 namespaces are registered
+    on this host; the content surface lives in `wp/v2`. There is no Group14 version, no version
+    header, and no published policy.
+  artifact: lifecycle/group14-technologies-lifecycle.yml
+error_envelope:
+  format: wordpress-rest
+  media_type: application/json
+  rfc9457: false
+  shape: '{ "code": "<slug>", "message": "<human text>", "data": { "status": <http code> } }'
+  detail: 'Not problem+json. The HTTP status is duplicated inside `data.status`.'
+  artifact: errors/group14-technologies-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  detail: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After on any observed response. Whatever protection
+    exists is Cloudflare and WP Engine edge policy, which is invisible to the caller until it fires.
+  artifact: rate-limits/group14-technologies-rate-limits.yml
+caching:
+  detail: 'Responses carry `cache-control: max-age=600, must-revalidate` and WP Engine `x-cacheable: SHORT` / `x-cache: HIT|MISS`. No ETag or Last-Modified was observed on collection responses, so conditional requests are not usable.'
+cors:
+  allow_origin: '*'
+  allow_headers: [Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type]
+  expose_headers: [X-WP-Total, X-WP-TotalPages, Link]
+  detail: Browser clients can read the pagination headers cross-origin.
+localization:
+  supported: true
+  param: wpml_language
+  values: [zh-hans, en, de, ja, ko]
+  detail: >-
+    WPML is installed and every route accepts a `wpml_language` argument, declared in the site's own
+    route index. This is a genuinely Group14-specific convention — the company operates in the US,
+    Korea, Japan, Germany and China and the content surface is translated accordingly.
+dry_run_mode:
+  supported: false
+  status: na
+  detail: No dry-run, preview or validate-only mode. There is no public write surface for one to apply to.
+reversibility:
+  status: na
+  grade: na
+  detail: >-
+    The public surface is read-only — every operation in openapi/ is a GET, and every write method
+    on these routes returns 401 anonymously with no public credential path. There is no action an
+    agent can take here that would need taking back, so reversibility, dry_run_mode and idempotency
+    are all `na` rather than zero. No reversal operation and no reversal window is asserted, because
+    the provider states none and there is no write surface to state one about.
+  write_surfaces: []

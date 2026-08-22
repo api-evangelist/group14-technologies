@@ -1,0 +1,74 @@
+generated: '2026-08-22'
+method: probed
+source: live error responses from https://group14.technology/wp-json/ + openapi/ 4xx responses
+format: wordpress-rest
+rfc9457: false
+media_type: application/json
+envelope:
+  shape: '{ "code": "<slug>", "message": "<human text>", "data": { "status": <http code> } }'
+  fields:
+    code: Machine-readable WordPress error slug. This is the field to branch on.
+    message: Human-readable message, localized to the site language.
+    data.status: HTTP status code, duplicated inside the body.
+  detail: >-
+    Group14 publishes no error reference. Every entry below was either observed live on 2026-08-22
+    or is documented WordPress core behaviour that this surface inherits unmodified. Entries marked
+    observed:true were captured from a real response against group14.technology.
+problem_types:
+- code: rest_forbidden
+  status: 401
+  title: Not allowed
+  message: 'Sorry, you are not allowed to do that.'
+  observed: true
+  observed_at:
+  - /wp-json/mcp/mcp-adapter-default-server
+  - /wp-json/wp-abilities/v1/abilities
+  - /wp-json/wp/v2/users
+  cause: A route or field that requires an authenticated WordPress capability was requested anonymously.
+  remediation: >-
+    None available to a third party. Group14 publishes no credential issuance path. Treat these
+    routes as closed rather than retrying.
+- code: rest_invalid_param
+  status: 400
+  title: Invalid parameter
+  observed: false
+  cause: >-
+    A query argument failed the server's declared schema — per_page above 100 or below 1, an
+    orderby value outside the route's enum, a malformed ISO 8601 date in after/before, or a
+    non-integer id filter.
+  remediation: 'Read the accepted args from the route''s own OPTIONS document, or from openapi/ which was derived from it. data.params names the offending argument.'
+- code: rest_post_invalid_page_number
+  status: 400
+  title: Page number too large
+  observed: false
+  cause: '`page` exceeds X-WP-TotalPages for the current per_page.'
+  remediation: Read X-WP-TotalPages from the first response and stop there.
+- code: rest_post_invalid_id
+  status: 404
+  title: Invalid post id
+  observed: false
+  cause: The numeric id in the path does not resolve to a published record of that post type.
+  remediation: 'Resolve ids from the collection or from listSearchResults; ids are not stable across content types.'
+- code: rest_term_invalid
+  status: 404
+  title: Term does not exist
+  observed: false
+  cause: The taxonomy term id in the path does not exist.
+  remediation: Resolve term ids from listResourceCategories, listJobDepartments, listJobLocations or listVideoCategories.
+- code: rest_no_route
+  status: 404
+  title: No route was found
+  observed: false
+  cause: The path is not a registered route on this host.
+  remediation: 'Read the live route index at /wp-json/ (getApiIndex) — 455 routes across 21 namespaces at capture.'
+- code: rest_cookie_invalid_nonce
+  status: 403
+  title: Cookie nonce is invalid
+  observed: false
+  cause: A write was attempted with a session cookie but a missing or stale X-WP-Nonce.
+  remediation: Not applicable to public consumers; there is no public write path.
+not_covered:
+  detail: >-
+    Cloudflare and WP Engine sit in front of this origin. Edge-level rejections (challenge pages,
+    5xx from the CDN) do not use the WordPress envelope and will arrive as HTML. A consumer must
+    branch on content-type before parsing, not on status alone.

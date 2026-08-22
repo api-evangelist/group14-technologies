@@ -1,0 +1,61 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Group14 Technologies Content API
+  version: 1.0.0
+extends: group14-technologies-content-openapi.yml
+x-generated: '2026-08-22'
+x-method: generated
+x-source: openapi/group14-technologies-content-openapi.yml
+x-note: Captures the enhancements API Evangelist adds on top of the derived contract. The original OpenAPI in openapi/
+  is never mutated. Group14 Technologies publishes no OpenAPI, so there is no provider document for this overlay
+  to diverge from — it annotates our own derivation.
+actions:
+- target: $.info
+  description: Record that this document is a third-party derivation, not a provider-published contract, and name
+    the exact evidence it was built from.
+  update:
+    x-api-evangelist-derivation:
+      derived_by: API Evangelist enrichment pipeline
+      derived_on: '2026-08-22'
+      evidence:
+      - https://group14.technology/wp-json/ (route index, 455 routes / 21 namespaces)
+      - HTTP OPTIONS documents per route (parameters + JSON Schema)
+      - Live GET responses for record counts and pagination headers
+      provider_publishes_openapi: false
+      provider_publishes_docs: false
+- target: $.info
+  description: Attach the cross-cutting artifacts a consumer needs, none of which the provider publishes.
+  update:
+    x-artifacts:
+      authentication: authentication/group14-technologies-authentication.yml
+      conventions: conventions/group14-technologies-conventions.yml
+      errors: errors/group14-technologies-problem-types.yml
+      lifecycle: lifecycle/group14-technologies-lifecycle.yml
+      rate_limits: rate-limits/group14-technologies-rate-limits.yml
+      data_model: data-model/group14-technologies-data-model.yml
+      agentic_access: agentic-access/group14-technologies-agentic-access.yml
+- target: $.info
+  description: State the read-only, unmetered, unversioned reality of the surface so an agent does not assume a
+    product contract.
+  update:
+    x-consumption-posture:
+      public_read: true
+      credential_required: false
+      write_surface_public: false
+      rate_limits_published: false
+      sla: null
+      status_page: null
+      stability: unmanaged — content types and ACF field sets can change without notice; resolve by slug, not by
+        numeric id
+- target: $.paths.*.get
+  description: Mark every operation as a safe, side-effect-free read. Nothing in this document mutates state.
+  update:
+    x-safe: true
+    x-consequence: none
+    x-reversibility: na
+- target: $.servers
+  description: Record that the base URL was reconciled against apis.yml and the live host, and that there is exactly
+    one.
+  update:
+    x-verified-on: '2026-08-22'
+    x-verified-status: 200

@@ -1,0 +1,69 @@
+generated: '2026-08-22'
+method: derived
+source: openapi/ (7 derived specs, 31 operations) + probed MCP surface at https://group14.technology/wp-json/mcp
+surfaces:
+  openapi:
+    files:
+    - openapi/group14-technologies-resources-openapi.yml
+    - openapi/group14-technologies-content-openapi.yml
+    - openapi/group14-technologies-careers-openapi.yml
+    - openapi/group14-technologies-locations-openapi.yml
+    - openapi/group14-technologies-media-openapi.yml
+    - openapi/group14-technologies-search-openapi.yml
+    - openapi/group14-technologies-discovery-openapi.yml
+    operations: 31
+    gated: false
+    note: Anonymous read-only. Derived from the server's own OPTIONS schema documents.
+  graphql:
+    endpoint: null
+    gated: null
+    note: No GraphQL surface. https://group14.technology/graphql returns 404.
+  mcp:
+    endpoint: https://group14.technology/wp-json/mcp/mcp-adapter-default-server
+    gated: true
+    note: tools/list returns HTTP 401 rest_forbidden anonymously. The tool set is unreadable.
+crosswalk: []
+mcp_only: []
+rest_only:
+- {operationId: listResources, reason: 'MCP tool set is auth-gated and unreadable; no binding can be asserted.'}
+- {operationId: getResource, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listResourceCategories, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getResourceCategory, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listPages, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getPage, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listPosts, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getPost, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listCategories, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getCategory, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listTags, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getTag, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listJobOpenings, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getJobOpening, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listJobDepartments, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getJobDepartment, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listJobLocations, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getJobLocation, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listLocations, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getLocation, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listMediaItems, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getMediaItem, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listVideos, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getVideo, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listVideoCategories, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getVideoCategory, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listSearchResults, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listContentTypes, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listTaxonomies, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: listStatuses, reason: MCP tool set is auth-gated and unreadable.}
+- {operationId: getApiIndex, reason: MCP tool set is auth-gated and unreadable.}
+coverage:
+  mcp_tools: 0
+  rest_operations: 31
+  bound: 0
+  mcp_only: 0
+  rest_only: 31
+  note: >-
+    Zero bindings, and that is the finding rather than a gap in this pass. The MCP endpoint is real
+    and provider-served but returns 401 to every anonymous call, so no tool name exists to bind. The
+    entire REST surface is therefore rest_only. Mapping tools by guessed name would fabricate a
+    crosswalk; nothing is asserted.

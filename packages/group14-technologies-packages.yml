@@ -1,0 +1,19 @@
+generated: '2026-08-22'
+method: searched
+source: 'registry searches: registry.npmjs.org, pypi.org, plus the provider site'
+package_count: 0
+official_count: 0
+detail: >-
+  Group14 Technologies ships no client libraries, no SDKs and no CLI. It is a battery materials
+  manufacturer with no developer program, so there is no API for a client library to wrap. Each
+  registry below was queried unauthenticated on 2026-08-22 and returned nothing first-party. NO
+  `SDKs` and NO `CLI` pointer is emitted in apis.yml, because either one would assert the company
+  ships something it does not.
+packages: []
+registries_searched:
+- {registry: npm, query: group14, url: 'https://registry.npmjs.org/-/v1/search?text=group14', result: 'no first-party package; matches are unrelated third-party publishers'}
+- {registry: pypi, query: group14, url: 'https://pypi.org/pypi/group14/json', result: '404 Not Found'}
+- {registry: github, query: 'github.com/group14technologies', result: '404 — no GitHub organization exists under any probed name'}
+other_sources_checked:
+- {source: 'https://group14.technology/ (full page inventory, 25 pages)', result: 'no SDK, download, developer or integrations page'}
+- {source: 'provider llms.txt', result: 'lists pages, job openings, locations, resources and videos only — no developer content'}

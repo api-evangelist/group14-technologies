@@ -1,0 +1,127 @@
+generated: '2026-08-22'
+method: derived
+source: openapi/ ($ref links + id-reference fields) + live term counts from https://group14.technology/wp-json/
+description: >-
+  Entity-relationship graph for the WordPress REST content surface behind group14.technology,
+  derived from the schemas the server publishes through HTTP OPTIONS. Identifiers are WordPress
+  database integers, not stable public keys — see the warning at the end.
+entities:
+- name: Resource
+  route: /wp/v2/resource
+  post_type: resource
+  count_at_capture: 169
+  description: >-
+    The Group14 resource library: press releases, news coverage, blog posts and whitepapers. The
+    richest and most Group14-specific content on the surface.
+  id_field: id
+  natural_key: slug
+  key_fields: [id, slug, link, date, modified, title.rendered, excerpt.rendered, content.rendered, featured_media, resource-category, acf]
+- name: ResourceCategory
+  route: /wp/v2/resource-category
+  taxonomy: resource-category
+  count_at_capture: 5
+  terms_at_capture: [{id: 31, slug: press-releases, count: 42}, {id: 33, slug: blog, count: 36}, {id: 34, slug: news, count: 89}, {id: 29, slug: whitepapers, count: 5}, {id: 32, slug: company-news, count: 0}]
+  id_field: id
+  natural_key: slug
+- name: Page
+  route: /wp/v2/pages
+  post_type: page
+  count_at_capture: 25
+  description: Marketing and corporate pages — Our Technology, Manufacturing, Patents, Culture, Careers, Contact, Terms, Privacy, and the per-facility manufacturing pages.
+  id_field: id
+  natural_key: slug
+- name: Post
+  route: /wp/v2/posts
+  post_type: post
+  count_at_capture: 1
+  description: The stock WordPress post archive. Group14 publishes editorial content as Resources instead, so this is effectively empty.
+  id_field: id
+  natural_key: slug
+- name: JobOpening
+  route: /wp/v2/job-opening
+  post_type: job-opening
+  count_at_capture: 4
+  id_field: id
+  natural_key: slug
+- name: JobDepartment
+  route: /wp/v2/job-department
+  taxonomy: job-department
+  count_at_capture: 19
+  id_field: id
+  natural_key: slug
+- name: JobLocation
+  route: /wp/v2/job-location
+  taxonomy: job-location
+  count_at_capture: 19
+  id_field: id
+  natural_key: slug
+- name: Location
+  route: /wp/v2/location
+  post_type: location
+  count_at_capture: 6
+  description: >-
+    Group14 facility records — BAM-1, BAM-2, BAM-3, the silane factory and the Seoul offices. The
+    company's manufacturing footprint as structured data.
+  id_field: id
+  natural_key: slug
+- name: Video
+  route: /wp/v2/video
+  post_type: video
+  count_at_capture: 15
+  id_field: id
+  natural_key: slug
+- name: VideoCategory
+  route: /wp/v2/video-category
+  taxonomy: video-category
+  count_at_capture: 3
+  id_field: id
+  natural_key: slug
+- name: MediaItem
+  route: /wp/v2/media
+  post_type: attachment
+  count_at_capture: 420
+  description: Photography, press assets and their generated size variants.
+  id_field: id
+  natural_key: slug
+- name: Category
+  route: /wp/v2/categories
+  taxonomy: category
+  count_at_capture: 1
+- name: Tag
+  route: /wp/v2/tags
+  taxonomy: post_tag
+  count_at_capture: 0
+- name: SearchResult
+  route: /wp/v2/search
+  count_at_capture: 220
+  description: 'Lightweight cross-content projection: id, title, url, type, subtype. The only entity that spans post types.'
+relationships:
+- {from: Resource, to: ResourceCategory, type: has_many, via: 'resource-category (array of term ids)'}
+- {from: Resource, to: MediaItem, type: has_one, via: featured_media (attachment id)}
+- {from: Resource, to: Resource, type: belongs_to, via: parent (post id), note: Hierarchical parent; unused in practice.}
+- {from: Page, to: Page, type: belongs_to, via: parent (post id), note: 'Real and used — /manufacturing/bam-1/ is a child of /manufacturing/.'}
+- {from: Page, to: MediaItem, type: has_one, via: featured_media}
+- {from: Post, to: Category, type: has_many, via: categories}
+- {from: Post, to: Tag, type: has_many, via: tags}
+- {from: JobOpening, to: JobDepartment, type: has_many, via: job-department}
+- {from: JobOpening, to: JobLocation, type: has_many, via: job-location}
+- {from: Video, to: VideoCategory, type: has_many, via: video-category}
+- {from: Video, to: MediaItem, type: has_one, via: featured_media}
+- {from: Location, to: MediaItem, type: has_one, via: featured_media}
+- {from: ResourceCategory, to: ResourceCategory, type: belongs_to, via: parent (term id)}
+- {from: SearchResult, to: Resource, type: has_one, via: 'id + subtype (polymorphic; subtype names the post type)'}
+extension_fields:
+  acf:
+    present_on: [Resource, Location, JobOpening, Video, ResourceCategory]
+    detail: >-
+      Advanced Custom Fields data is exposed as a free-form `acf` object. The server declares it with
+      no advertised properties, so its contents are NOT enumerated here — enumerating them would mean
+      inventing a schema the provider does not publish. A consumer must inspect a live record.
+  meta:
+    present_on: [ResourceCategory, JobDepartment, JobLocation, VideoCategory, Category, Tag]
+    detail: Free-form term meta, likewise undeclared.
+identifier_warning: >-
+  Every `id` here is a WordPress database primary key. They are unique per site but carry no
+  semantics, are not prefixed by type, and collide conceptually across post types and taxonomies
+  (Resource 550851 and MediaItem 550851 are different objects in different collections). Resolve and
+  cache by `slug`, which is the natural key and is stable in the site's own URLs.

@@ -1,0 +1,94 @@
+generated: '2026-08-22'
+method: probed
+source: live unauthenticated GET responses from https://group14.technology/wp-json/
+description: >-
+  Real request/response pairs captured against group14.technology on 2026-08-22. Every response body
+  below was returned by the live host; nothing is synthetic. Bodies are trimmed to the fields
+  requested via `_fields`, which is itself the recommended calling pattern for this surface.
+examples:
+- operationId: listResources
+  description: The most useful call on this surface — the Group14 resource library, newest first.
+  request:
+    method: GET
+    url: 'https://group14.technology/wp-json/wp/v2/resource?per_page=1&_fields=id,slug,link,date,title,excerpt,resource-category'
+  response:
+    status: 200
+    headers:
+      X-WP-Total: '169'
+      X-WP-TotalPages: '169'
+      Link: '<https://group14.technology/wp-json/wp/v2/resource?per_page=1&page=2>; rel="next"'
+      Cache-Control: 'max-age=600, must-revalidate'
+    body:
+    - id: 550851
+      date: '2026-07-16T10:10:41'
+      slug: scaling-next-gen-battery-innovation-why-domestic-supply-chains-matter-now
+      link: https://group14.technology/resources/blog/scaling-next-gen-battery-innovation-why-domestic-supply-chains-matter-now/
+      title: {rendered: 'Scaling Next-Gen Battery Innovation: Why Domestic Supply Chains Matter Now'}
+      excerpt: {rendered: '<p>We filed a public interest statement with the U.S. International Trade Commission highlighting the importance of protecting American innovation in silicon-carbon battery materials to strengthen domestic supply chains and advance U.S. technology leadership.</p>', protected: false}
+      resource-category: [33]
+- operationId: listResourceCategories
+  description: The five-term vocabulary that classifies the resource library, with live counts.
+  request:
+    method: GET
+    url: 'https://group14.technology/wp-json/wp/v2/resource-category?per_page=10&_fields=id,name,slug,count'
+  response:
+    status: 200
+    body:
+    - {id: 33, count: 36, name: Blog, slug: blog}
+    - {id: 32, count: 0, name: Company News, slug: company-news}
+    - {id: 34, count: 89, name: News, slug: news}
+    - {id: 31, count: 42, name: Press Releases, slug: press-releases}
+    - {id: 29, count: 5, name: Whitepapers, slug: whitepapers}
+- operationId: listLocations
+  description: Group14's manufacturing footprint as structured records — the most company-specific data on the surface.
+  request:
+    method: GET
+    url: 'https://group14.technology/wp-json/wp/v2/location?per_page=2&_fields=id,slug,link,title'
+  response:
+    status: 200
+    headers: {X-WP-Total: '6'}
+    body:
+    - {id: 234484, slug: seouloffices, link: 'https://group14.technology/location/seouloffices/', title: {rendered: Seoul Offices}}
+    - {id: 7288, slug: bam-3, link: 'https://group14.technology/location/bam-3/', title: {rendered: BAM-3}}
+- operationId: listJobOpenings
+  description: Open roles, machine-readable.
+  request:
+    method: GET
+    url: 'https://group14.technology/wp-json/wp/v2/job-opening?per_page=2&_fields=id,slug,link,title'
+  response:
+    status: 200
+    headers: {X-WP-Total: '4'}
+    body:
+    - {id: 424411, slug: business-development-manager-china-market, link: 'https://group14.technology/job-opening/business-development-manager-china-market/', title: {rendered: Business Development Manager (China Market)}}
+    - {id: 5706, slug: other-careers-seattle, link: 'https://group14.technology/job-opening/other-careers-seattle/', title: {rendered: 'Other Careers &#8211; Seattle'}}
+- operationId: listSearchResults
+  description: Cross-content search. This is how to find a Group14 announcement without knowing which content type holds it.
+  request:
+    method: GET
+    url: 'https://group14.technology/wp-json/wp/v2/search?search=ISO&per_page=1&_fields=title,url,subtype'
+  response:
+    status: 200
+    headers: {X-WP-Total: '220'}
+    body:
+    - {title: 'Group14 Fortifies Global Manufacturing Roadmap With ISO 9001 Certification', url: 'https://group14.technology/resources/press-releases/group14-technologies-fortifies-global-manufacturing-roadmap-for-silicon-battery-materials-with-iso-9001-certification/', subtype: resource}
+- operationId: getApiIndex
+  description: The self-describing route index — the only documentation this surface has.
+  request:
+    method: GET
+    url: https://group14.technology/wp-json/
+  response:
+    status: 200
+    body_excerpt:
+      name: Group14
+      description: Lithium-Silicon Battery Materials
+      url: https://group14.technology
+      gmt_offset: -7
+      authentication: []
+      namespaces_count: 21
+      routes_count: 455
+error_examples:
+- description: Every gated route answers the same way. This is the exact body, captured live.
+  request: {method: POST, url: 'https://group14.technology/wp-json/mcp/mcp-adapter-default-server', body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'}
+  response:
+    status: 401
+    body: {code: rest_forbidden, message: 'Sorry, you are not allowed to do that.', data: {status: 401}}
