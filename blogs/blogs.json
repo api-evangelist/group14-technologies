@@ -1,0 +1,21 @@
+{
+  "repo": "group14-technologies",
+  "feeds": [
+    {
+      "source": "https://group14.technology/careers/",
+      "feed_url": "https://group14.technology/careers/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://group14.technology/resource-category/blog/",
+      "feed_url": "https://group14.technology/resource-category/blog/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-22T20:20:02Z"
+}
