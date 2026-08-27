@@ -33,24 +33,37 @@ tags:
 - Clean Energy
 - Content
 apis:
-- aid: group14-technologies:group14-technologies-resources-api
-  name: Group14 Technologies Resources API
+- aid: group14-technologies:group14-technologies-mcp-server
+  name: Group14 Technologies MCP Server (gated)
   description: >-
-    Public, unauthenticated read access to the Group14 resource library — press releases, news
-    coverage, blog posts and whitepapers about SCC55 and the BAM factory network — plus the
-    resource-category vocabulary that classifies them. Verified live at 169 published resources
-    across 5 categories on 2026-08-22.
+    A WordPress MCP Adapter endpoint registered on group14.technology at /wp-json/mcp/mcp-adapter-default-server.
+    The route is real — the namespace `mcp` is declared in the site REST index and the endpoint answers
+    POST, GET and DELETE — but every anonymous call, including `tools/list`, returns HTTP 401 `rest_forbidden`.
+    This is site-administration infrastructure gated to authenticated WordPress users, not a customer-facing
+    agent surface, and Group14 publishes no credential issuance path for it. The tool list and input schemas
+    cannot be read without authentication and are therefore NOT recorded.
+  humanURL: https://group14.technology/wp-json/mcp
+  baseURL: https://group14.technology/wp-json/mcp/mcp-adapter-default-server
+  tags:
+  - MCP
+  - Agents
+  properties:
+  - type: MCPServer
+    url: mcp/group14-technologies-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/group14-technologies-tool-crosswalk.yml
+  - type: Authentication
+    url: authentication/group14-technologies-authentication.yml
+- aid: group14-technologies:group14-technologies-discovery-api
+  name: Group14 Technologies Discovery API
+  description: Self-describing route, type and taxonomy metadata.
   humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
-  - Resources
-  - Content
-  - Taxonomy
+  - Discovery
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-resources-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-resources-overlay.yaml
+    url: openapi/group14-technologies-discovery-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
@@ -63,54 +76,16 @@ apis:
     url: conformance/group14-technologies-conformance.yml
   - type: Lifecycle
     url: lifecycle/group14-technologies-lifecycle.yml
-- aid: group14-technologies:group14-technologies-content-api
-  name: Group14 Technologies Content API
-  description: >-
-    Public, unauthenticated read access to the marketing and corporate pages of group14.technology
-    — Our Technology, Manufacturing, Patents, Culture, Careers, Contact, Terms and Privacy — plus
-    the WordPress post archive and its category and tag vocabularies. Verified live at 25 published
-    pages and 1 post on 2026-08-22.
-  humanURL: https://group14.technology/
+- aid: group14-technologies:group14-technologies-job-openings-api
+  name: Group14 Technologies Job Openings API
+  description: Open roles published on group14.technology/careers.
+  humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
-  - Pages
-  - Posts
-  - Content
+  - Job Openings
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-content-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-content-overlay.yaml
-  - type: Authentication
-    url: authentication/group14-technologies-authentication.yml
-  - type: ErrorCatalog
-    url: errors/group14-technologies-problem-types.yml
-  - type: Conventions
-    url: conventions/group14-technologies-conventions.yml
-  - type: DataModel
-    url: data-model/group14-technologies-data-model.yml
-  - type: Conformance
-    url: conformance/group14-technologies-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/group14-technologies-lifecycle.yml
-- aid: group14-technologies:group14-technologies-careers-api
-  name: Group14 Technologies Careers API
-  description: >-
-    Public, unauthenticated read access to Group14 job openings and the department and location
-    vocabularies that classify them — the machine-readable view of hiring across the Woodinville
-    headquarters, the Moses Lake BAM-2 factory and the Sangju, South Korea BAM-3 joint-venture
-    site. Verified live at 4 open roles, 19 departments and 19 job locations on 2026-08-22.
-  humanURL: https://group14.technology/careers/
-  baseURL: https://group14.technology/wp-json
-  tags:
-  - Careers
-  - Jobs
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/group14-technologies-careers-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-careers-overlay.yaml
+    url: openapi/group14-technologies-job-openings-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
@@ -125,23 +100,14 @@ apis:
     url: lifecycle/group14-technologies-lifecycle.yml
 - aid: group14-technologies:group14-technologies-locations-api
   name: Group14 Technologies Locations API
-  description: >-
-    Public, unauthenticated read access to the Group14 facility records — BAM-1, BAM-2 and BAM-3,
-    the Group14 silane factory and the Seoul offices. This is the site-specific `location` custom
-    post type and the most Group14-particular resource on the surface: the company manufacturing
-    footprint as structured data rather than a map graphic. Verified live at 6 published locations
-    on 2026-08-22.
-  humanURL: https://group14.technology/manufacturing/
+  description: Group14 manufacturing sites and offices as structured records.
+  humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
   - Locations
-  - Manufacturing
-  - Content
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-locations-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-locations-overlay.yaml
+    url: openapi/group14-technologies-locations-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
@@ -157,21 +123,81 @@ apis:
 - aid: group14-technologies:group14-technologies-media-api
   name: Group14 Technologies Media API
   description: >-
-    Public, unauthenticated read access to the group14.technology media library and video library —
-    factory and material photography, press imagery and the generated size variants of each
-    attachment, plus the site-specific `video` custom post type and its category vocabulary.
-    Verified live at 420 attachments and 15 videos across 3 video categories on 2026-08-22.
+    WordPress media attachments — photography, press assets and their generated size variants.
   humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
   - Media
-  - Video
-  - Content
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-media-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-media-overlay.yaml
+    url: openapi/group14-technologies-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/group14-technologies-authentication.yml
+  - type: ErrorCatalog
+    url: errors/group14-technologies-problem-types.yml
+  - type: Conventions
+    url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
+  - type: Conformance
+    url: conformance/group14-technologies-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/group14-technologies-lifecycle.yml
+- aid: group14-technologies:group14-technologies-pages-api
+  name: Group14 Technologies Pages API
+  description: Static marketing, corporate and policy pages of group14.technology.
+  humanURL: https://group14.technology/resources/
+  baseURL: https://group14.technology/wp-json
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/group14-technologies-pages-api-openapi.yml
+  - type: Authentication
+    url: authentication/group14-technologies-authentication.yml
+  - type: ErrorCatalog
+    url: errors/group14-technologies-problem-types.yml
+  - type: Conventions
+    url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
+  - type: Conformance
+    url: conformance/group14-technologies-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/group14-technologies-lifecycle.yml
+- aid: group14-technologies:group14-technologies-posts-api
+  name: Group14 Technologies Posts API
+  description: >-
+    The WordPress post archive (Group14 publishes editorial content mainly as resources, not posts).
+  humanURL: https://group14.technology/resources/
+  baseURL: https://group14.technology/wp-json
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/group14-technologies-posts-api-openapi.yml
+  - type: Authentication
+    url: authentication/group14-technologies-authentication.yml
+  - type: ErrorCatalog
+    url: errors/group14-technologies-problem-types.yml
+  - type: Conventions
+    url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
+  - type: Conformance
+    url: conformance/group14-technologies-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/group14-technologies-lifecycle.yml
+- aid: group14-technologies:group14-technologies-resources-api
+  name: Group14 Technologies Resources API
+  description: Press releases, news, blog posts and whitepapers published by Group14 Technologies.
+  humanURL: https://group14.technology/resources/
+  baseURL: https://group14.technology/wp-json
+  tags:
+  - Resources
+  properties:
+  - type: OpenAPI
+    url: openapi/group14-technologies-resources-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
@@ -186,85 +212,90 @@ apis:
     url: lifecycle/group14-technologies-lifecycle.yml
 - aid: group14-technologies:group14-technologies-search-api
   name: Group14 Technologies Search API
-  description: >-
-    Public, unauthenticated cross-content search over group14.technology — pages, resources, job
-    openings, locations and videos — returning lightweight id / title / url / type / subtype
-    records. Verified live at 220 searchable objects on 2026-08-22.
-  humanURL: https://group14.technology/
+  description: Cross-content search over every public content type.
+  humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
   - Search
-  - Content
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-search-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-search-overlay.yaml
+    url: openapi/group14-technologies-search-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
     url: errors/group14-technologies-problem-types.yml
   - type: Conventions
     url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
   - type: Conformance
     url: conformance/group14-technologies-conformance.yml
   - type: Lifecycle
     url: lifecycle/group14-technologies-lifecycle.yml
-- aid: group14-technologies:group14-technologies-discovery-api
-  name: Group14 Technologies Discovery API
-  description: >-
-    Public, unauthenticated discovery metadata for group14.technology — the self-describing route
-    index (455 routes across 21 namespaces at capture), the registered content types and
-    taxonomies, and the publication statuses. This is the surface that makes the rest of the
-    Group14 content API machine-readable in the complete absence of published documentation.
-  humanURL: https://group14.technology/wp-json/
+- aid: group14-technologies:group14-technologies-taxonomy-api
+  name: Group14 Technologies Taxonomy API
+  description: The job-department and job-location vocabularies used to classify roles.
+  humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
-  - Discovery
-  - Metadata
+  - Taxonomy
   properties:
   - type: OpenAPI
-    url: openapi/group14-technologies-discovery-openapi.yml
-  - type: Overlay
-    url: overlays/group14-technologies-discovery-overlay.yaml
+    url: openapi/group14-technologies-taxonomy-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
   - type: ErrorCatalog
     url: errors/group14-technologies-problem-types.yml
   - type: Conventions
     url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
   - type: Conformance
     url: conformance/group14-technologies-conformance.yml
   - type: Lifecycle
     url: lifecycle/group14-technologies-lifecycle.yml
-- aid: group14-technologies:group14-technologies-mcp-server
-  name: Group14 Technologies MCP Server (gated)
-  description: >-
-    A WordPress MCP Adapter endpoint registered on group14.technology at
-    /wp-json/mcp/mcp-adapter-default-server. The route is real — the namespace `mcp` is declared in
-    the site REST index and the endpoint answers POST, GET and DELETE — but every anonymous call,
-    including `tools/list`, returns HTTP 401 `rest_forbidden`. This is site-administration
-    infrastructure gated to authenticated WordPress users, not a customer-facing agent surface, and
-    Group14 publishes no credential issuance path for it. The tool list and input schemas cannot be
-    read without authentication and are therefore NOT recorded.
-  humanURL: https://group14.technology/wp-json/mcp
-  baseURL: https://group14.technology/wp-json/mcp/mcp-adapter-default-server
+- aid: group14-technologies:group14-technologies-video-api
+  name: Group14 Technologies Video API
+  description: The site-specific video custom post type.
+  humanURL: https://group14.technology/resources/
+  baseURL: https://group14.technology/wp-json
   tags:
-  - MCP
-  - Agents
+  - Video
   properties:
-  - type: MCPServer
-    url: mcp/group14-technologies-mcp.yml
-  - type: ToolCrosswalk
-    url: mcp/group14-technologies-tool-crosswalk.yml
+  - type: OpenAPI
+    url: openapi/group14-technologies-video-api-openapi.yml
   - type: Authentication
     url: authentication/group14-technologies-authentication.yml
+  - type: ErrorCatalog
+    url: errors/group14-technologies-problem-types.yml
+  - type: Conventions
+    url: conventions/group14-technologies-conventions.yml
+  - type: DataModel
+    url: data-model/group14-technologies-data-model.yml
+  - type: Conformance
+    url: conformance/group14-technologies-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/group14-technologies-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/group14-technologies-resources-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-content-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-careers-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-locations-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-media-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-search-overlay.yaml
+- type: Overlay
+  url: overlays/group14-technologies-discovery-overlay.yaml
 - type: Website
   url: https://group14.technology/
 - type: About
