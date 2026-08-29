@@ -1,0 +1,47 @@
+{
+  "provider": "group14-technologies",
+  "sources": [
+    "group14-technologies-careers-openapi.yml",
+    "group14-technologies-content-openapi.yml",
+    "group14-technologies-discovery-openapi.yml",
+    "group14-technologies-locations-openapi.yml",
+    "group14-technologies-media-openapi.yml",
+    "group14-technologies-resources-openapi.yml",
+    "group14-technologies-search-openapi.yml"
+  ],
+  "outputs": [
+    "group14-technologies-job-openings-api-openapi.yml",
+    "group14-technologies-taxonomy-api-openapi.yml",
+    "group14-technologies-pages-api-openapi.yml",
+    "group14-technologies-posts-api-openapi.yml",
+    "group14-technologies-discovery-api-openapi.yml",
+    "group14-technologies-locations-api-openapi.yml",
+    "group14-technologies-media-api-openapi.yml",
+    "group14-technologies-video-api-openapi.yml",
+    "group14-technologies-resources-api-openapi.yml",
+    "group14-technologies-search-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/group14-technologies-careers-openapi.yml",
+    "archived openapi/group14-technologies-content-openapi.yml",
+    "archived openapi/group14-technologies-discovery-openapi.yml",
+    "archived openapi/group14-technologies-locations-openapi.yml",
+    "archived openapi/group14-technologies-media-openapi.yml",
+    "archived openapi/group14-technologies-resources-openapi.yml",
+    "archived openapi/group14-technologies-search-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "group14-technologies-careers-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-content-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-discovery-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-locations-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-media-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-resources-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "group14-technologies-search-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "tag 'Taxonomy' spans 4 source specs (group14-technologies-careers-openapi.yml, group14-technologies-content-openapi.yml, group14-technologies-media-openapi.yml, group14-technologies-resources-openapi.yml): per-path servers applied",
+    "apis.yml register: written (+10 apis, 11 total)"
+  ],
+  "skipped": []
+}

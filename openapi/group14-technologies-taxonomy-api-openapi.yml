@@ -1,0 +1,1418 @@
+openapi: 3.2.0
+info:
+  title: Group14 Technologies Taxonomy API
+  version: wp/v2
+  contact:
+    name: Group14 Technologies
+    url: https://group14.technology/contact/
+  x-api-evangelist-note: Third-party profile. Group14 Technologies is a silicon battery materials manufacturer and publishes no developer program, no API documentation and no SDKs. This document describes the anonymously readable WordPress REST content API behind group14.technology. Every path, parameter and schema here was read from the server's own published OPTIONS documents on 2026-08-22 — nothing is invented.
+  x-derived-from: https://group14.technology/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-22'
+  description: 'Operations tagged Taxonomy across 4 of this provider''s published API definitions: group14-technologies-careers-openapi.yml, group14-technologies-content-openapi.yml, group14-technologies-media-openapi.yml, group14-technologies-resources-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://group14.technology/wp-json
+  description: Group14 Technologies WordPress REST API
+tags:
+- name: Taxonomy
+  description: The job-department and job-location vocabularies used to classify roles.
+paths:
+  /wp/v2/job-department:
+    get:
+      operationId: listJobDepartments
+      summary: List job department records
+      description: 'Anonymous, read-only listing of the `job-department` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of job department records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobDepartment'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/job-department/{id}:
+    get:
+      operationId: getJobDepartment
+      summary: Retrieve one job department record
+      description: Anonymous, read-only retrieval of a single `job-department` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the job department.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested job department record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDepartment'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/job-location:
+    get:
+      operationId: listJobLocations
+      summary: List job location records
+      description: 'Anonymous, read-only listing of the `job-location` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of job location records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobLocation'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/job-location/{id}:
+    get:
+      operationId: getJobLocation
+      summary: Retrieve one job location record
+      description: Anonymous, read-only retrieval of a single `job-location` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the job location.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested job location record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobLocation'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/categories:
+    get:
+      operationId: listCategories
+      summary: List category records
+      description: 'Anonymous, read-only listing of the `categories` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of category records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/categories/{id}:
+    get:
+      operationId: getCategory
+      summary: Retrieve one category record
+      description: Anonymous, read-only retrieval of a single `categories` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the category.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested category record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/tags:
+    get:
+      operationId: listTags
+      summary: List tag records
+      description: 'Anonymous, read-only listing of the `tags` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: offset
+        in: query
+        description: Offset the result set by a specific number of items.
+        schema:
+          type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of tag records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/tags/{id}:
+    get:
+      operationId: getTag
+      summary: Retrieve one tag record
+      description: Anonymous, read-only retrieval of a single `tags` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the tag.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested tag record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/video-category:
+    get:
+      operationId: listVideoCategories
+      summary: List video category records
+      description: 'Anonymous, read-only listing of the `video-category` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of video category records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoCategory'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/video-category/{id}:
+    get:
+      operationId: getVideoCategory
+      summary: Retrieve one video category record
+      description: Anonymous, read-only retrieval of a single `video-category` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the video category.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested video category record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoCategory'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/resource-category:
+    get:
+      operationId: listResourceCategories
+      summary: List resource category records
+      description: 'Anonymous, read-only listing of the `resource-category` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: order
+        in: query
+        description: Order sort attribute ascending or descending.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      - name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+          default: null
+      - name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of resource category records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResourceCategory'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+  /wp/v2/resource-category/{id}:
+    get:
+      operationId: getResourceCategory
+      summary: Retrieve one resource category record
+      description: Anonymous, read-only retrieval of a single `resource-category` record by its numeric WordPress id.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier for the resource category.
+        schema:
+          type: integer
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response. Anonymous callers may only use `view` and `embed`.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      responses:
+        '200':
+          description: The requested resource category record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceCategory'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found — `rest_post_invalid_id`, `rest_no_route` or `rest_term_invalid`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: https://group14.technology/wp-json
+      description: Group14 Technologies WordPress REST API
+components:
+  schemas:
+    Error:
+      type: object
+      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          description: Additional context.
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+      required:
+      - code
+      - message
+    JobLocation:
+      type: object
+      title: job-location
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - job-location
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+    JobDepartment:
+      type: object
+      title: job-department
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - job-department
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+    Tag:
+      type: object
+      title: tag
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - post_tag
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+    Category:
+      type: object
+      title: category
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - category
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+    VideoCategory:
+      type: object
+      title: video-category
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - video-category
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+    ResourceCategory:
+      type: object
+      title: resource-category
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - resource-category
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
+        acf:
+          description: ACF field data
+          type: object
+          properties: {}
+x-refined-from:
+- group14-technologies-careers-openapi.yml
+- group14-technologies-content-openapi.yml
+- group14-technologies-media-openapi.yml
+- group14-technologies-resources-openapi.yml

@@ -1,0 +1,430 @@
+openapi: 3.2.0
+info:
+  title: Group14 Technologies Discovery API
+  version: wp/v2
+  description: Public, unauthenticated discovery metadata for group14.technology — the self-describing route index (455 routes across 21 namespaces at capture), the registered content types and taxonomies, and the publication statuses. This is the surface that makes the rest of the Group14 content API machine-readable in the complete absence of published documentation. Group14 publishes no API documentation; this surface was discovered by probe and derived from the server's own OPTIONS schema documents.
+  contact:
+    name: Group14 Technologies
+    url: https://group14.technology/contact/
+  x-derived-from: https://group14.technology/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-22'
+  x-api-evangelist-note: Third-party profile. Group14 Technologies is a silicon battery materials manufacturer and publishes no developer program, no API documentation and no SDKs. This document describes the anonymously readable WordPress REST content API behind group14.technology. Every path, parameter and schema here was read from the server's own published OPTIONS documents on 2026-08-22 — nothing is invented.
+servers:
+- url: https://group14.technology/wp-json
+  description: Group14 Technologies WordPress REST API
+tags:
+- name: Discovery
+  description: Self-describing route, type and taxonomy metadata.
+paths:
+  /wp/v2/types:
+    get:
+      operationId: listContentTypes
+      summary: List content type records
+      description: 'Anonymous, read-only listing of the `types` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of content type records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Type'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List taxonomy records
+      description: 'Anonymous, read-only listing of the `taxonomies` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a specific post type.
+        schema:
+          type: string
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of taxonomy records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxonomy'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/statuses:
+    get:
+      operationId: listStatuses
+      summary: List status records
+      description: 'Anonymous, read-only listing of the `statuses` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of status records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /:
+    get:
+      operationId: getApiIndex
+      summary: Retrieve the WordPress REST API index
+      description: 'The self-describing root document: site name and description, the list of registered namespaces, and the full route index with the arguments each route accepts. 455 routes across 21 namespaces at capture on 2026-08-22.'
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      - name: namespace
+        in: query
+        description: Limit the index to a single namespace, e.g. `wp/v2` or `mcp`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The API index.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  url:
+                    type: string
+                    format: uri
+                  home:
+                    type: string
+                    format: uri
+                  gmt_offset:
+                    type: number
+                  namespaces:
+                    type: array
+                    items:
+                      type: string
+                  authentication:
+                    type: object
+                    description: Registered authentication schemes. Empty on this host.
+                  routes:
+                    type: object
+                    description: Map of route pattern to its methods, endpoints and accepted args.
+components:
+  schemas:
+    Taxonomy:
+      type: object
+      title: taxonomy
+      properties:
+        capabilities:
+          description: All capabilities used by the taxonomy.
+          type: object
+        description:
+          description: A human-readable description of the taxonomy.
+          type: string
+        hierarchical:
+          description: Whether or not the taxonomy should have children.
+          type: boolean
+        labels:
+          description: Human-readable labels for the taxonomy for various contexts.
+          type: object
+        name:
+          description: The title for the taxonomy.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the taxonomy.
+          type: string
+        show_cloud:
+          description: Whether or not the term cloud should be displayed.
+          type: boolean
+        types:
+          description: Types associated with the taxonomy.
+          type: array
+          items:
+            type: string
+        rest_base:
+          description: REST base route for the taxonomy.
+          type: string
+        rest_namespace:
+          description: REST namespace route for the taxonomy.
+          type: string
+        visibility:
+          description: The visibility settings for the taxonomy.
+          type: object
+          properties:
+            public:
+              description: Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.
+              type: boolean
+            publicly_queryable:
+              description: Whether the taxonomy is publicly queryable.
+              type: boolean
+            show_ui:
+              description: Whether to generate a default UI for managing this taxonomy.
+              type: boolean
+            show_admin_column:
+              description: Whether to allow automatic creation of taxonomy columns on associated post-types table.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the taxonomy available for selection in navigation menus.
+              type: boolean
+            show_in_quick_edit:
+              description: Whether to show the taxonomy in the quick/bulk edit panel.
+              type: boolean
+    Error:
+      type: object
+      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          description: Additional context.
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+      required:
+      - code
+      - message
+    Type:
+      type: object
+      title: type
+      properties:
+        capabilities:
+          description: All capabilities used by the post type.
+          type: object
+        description:
+          description: A human-readable description of the post type.
+          type: string
+        hierarchical:
+          description: Whether or not the post type should have children.
+          type: boolean
+        viewable:
+          description: Whether or not the post type can be viewed.
+          type: boolean
+        labels:
+          description: Human-readable labels for the post type for various contexts.
+          type: object
+        name:
+          description: The title for the post type.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the post type.
+          type: string
+        supports:
+          description: All features, supported by the post type.
+          type: object
+        has_archive:
+          description: If the value is a string, the value will be used as the archive slug. If the value is false the post type has no archive.
+          type:
+          - string
+          - boolean
+        taxonomies:
+          description: Taxonomies associated with post type.
+          type: array
+          items:
+            type: string
+        rest_base:
+          description: REST base route for the post type.
+          type: string
+        rest_namespace:
+          description: REST route's namespace for the post type.
+          type: string
+        visibility:
+          description: The visibility settings for the post type.
+          type: object
+          properties:
+            show_ui:
+              description: Whether to generate a default UI for managing this post type.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the post type available for selection in navigation menus.
+              type: boolean
+        icon:
+          description: The icon for the post type.
+          type: string
+        template:
+          type: array
+          description: The block template associated with the post type.
+        template_lock:
+          type:
+          - string
+          - boolean
+          enum:
+          - all
+          - insert
+          - contentOnly
+          - false
+          description: The template_lock associated with the post type, or false if none.
+    Status:
+      type: object
+      title: status
+      properties:
+        name:
+          description: The title for the status.
+          type: string
+        private:
+          description: Whether posts with this status should be private.
+          type: boolean
+        protected:
+          description: Whether posts with this status should be protected.
+          type: boolean
+        public:
+          description: Whether posts of this status should be shown in the front end of the site.
+          type: boolean
+        queryable:
+          description: Whether posts with this status should be publicly-queryable.
+          type: boolean
+        show_in_list:
+          description: Whether to include posts in the edit listing for their post type.
+          type: boolean
+        slug:
+          description: An alphanumeric identifier for the status.
+          type: string
+        date_floating:
+          description: Whether posts of this status may have floating published dates.
+          type: boolean

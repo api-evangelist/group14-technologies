@@ -1,0 +1,205 @@
+openapi: 3.2.0
+info:
+  title: Group14 Technologies Search API
+  version: wp/v2
+  description: Public, unauthenticated cross-content search over group14.technology — pages, resources, job openings, locations and videos — returning lightweight id / title / url / type / subtype records. Verified live at 220 searchable objects on 2026-08-22. Group14 publishes no API documentation; this surface was discovered by probe and derived from the server's own OPTIONS schema documents.
+  contact:
+    name: Group14 Technologies
+    url: https://group14.technology/contact/
+  x-derived-from: https://group14.technology/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-22'
+  x-api-evangelist-note: Third-party profile. Group14 Technologies is a silicon battery materials manufacturer and publishes no developer program, no API documentation and no SDKs. This document describes the anonymously readable WordPress REST content API behind group14.technology. Every path, parameter and schema here was read from the server's own published OPTIONS documents on 2026-08-22 — nothing is invented.
+servers:
+- url: https://group14.technology/wp-json
+  description: Group14 Technologies WordPress REST API
+tags:
+- name: Search
+  description: Cross-content search over every public content type.
+paths:
+  /wp/v2/search:
+    get:
+      operationId: listSearchResults
+      summary: List search result records
+      description: 'Anonymous, read-only listing of the `search` collection on group14.technology. Verified live on 2026-08-22; the collection answers `Allow: GET` without credentials.'
+      tags:
+      - Search
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+      - name: page
+        in: query
+        description: Current page of the collection.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Maximum number of items to be returned in result set.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: search
+        in: query
+        description: Limit results to those matching a string.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Limit results to items of an object type.
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+      - name: subtype
+        in: query
+        description: Limit results to items of one or more object subtypes.
+        schema:
+          type: array
+          default: any
+          items:
+            enum:
+            - post
+            - page
+            - job-opening
+            - location
+            - resource
+            - video
+            - category
+            - post_tag
+            - job-department
+            - job-location
+            - resource-category
+            - video-category
+            - any
+            type: string
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+      - name: wpml_language
+        in: query
+        description: WPML's language code
+        schema:
+          type: string
+          enum:
+          - zh-hans
+          - en
+          - de
+          - ja
+          - ko
+      responses:
+        '200':
+          description: A page of search result records.
+          headers:
+            X-WP-Total:
+              description: Total number of records in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the requested per_page.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '400':
+          description: Invalid parameter — `rest_invalid_param`. The WordPress REST API rejected a query argument (out-of-range `per_page`, unknown `orderby`, malformed date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized — `rest_forbidden` / `rest_cannot_read`. Returned when a non-public field or route (`context=edit`, users, MCP, abilities) is requested anonymously.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          description: Additional context.
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+      required:
+      - code
+      - message
+    SearchResult:
+      type: object
+      title: search-result
+      properties:
+        id:
+          description: Unique identifier for the object.
+          type:
+          - integer
+          - string
+        title:
+          description: The title for the object.
+          type: string
+        url:
+          description: URL to the object.
+          type: string
+          format: uri
+        type:
+          description: Object type.
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+        subtype:
+          description: Object subtype.
+          type: string
+          enum:
+          - post
+          - page
+          - job-opening
+          - location
+          - resource
+          - video
+          - category
+          - post_tag
+          - job-department
+          - job-location
+          - resource-category
+          - video-category
