@@ -15,6 +15,18 @@ description: >-
   discovery purposes and read-only without credentials, and a WordPress MCP Adapter endpoint on the
   same host that is registered but authentication-gated.
 url: https://raw.githubusercontent.com/api-evangelist/group14-technologies/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://group14.technology/wp-content/uploads/2025/10/cropped-group14_favicon.jpg
 x-type: company
 x-source: harvest:secondary-market
