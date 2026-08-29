@@ -1,0 +1,27 @@
+slug: group14-technologies
+provider: Group14 Technologies
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Automotive & Mobility
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Job Openings
+  spec_file: group14-technologies-job-openings-api-openapi.yml
+  capability_id: BC-300.10
+  capability_id_l1: BC-300
+  capability_name: Talent Acquisition Management
+  confidence: 0.78
+  evidence: GET /wp/v2/job-opening listJobOpenings — 'Public, unauthenticated read access to Group14 Technologies
+    job openings and the department and location vocabularies that classify them — the machine-readable
+    view of the hiring surface'
+  reason: The operations expose published job requisitions for the company's hiring surface, which is
+    the job-posting/sourcing side of Talent Acquisition. Confidence held below 0.9 because it is read-only
+    website content rather than a full ATS.
