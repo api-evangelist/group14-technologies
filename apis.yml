@@ -130,6 +130,8 @@ apis:
   humanURL: https://group14.technology/resources/
   baseURL: https://group14.technology/wp-json
   tags:
+  - Location
+  tags_raw:
   - Locations
   properties:
   - type: OpenAPI
