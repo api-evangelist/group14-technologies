@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Group14 Technologies Locations API
   version: wp/v2
-  description: 'Public, unauthenticated read access to the Group14 Technologies facility records behind group14.technology — the BAM-1, BAM-2 and BAM-3 battery active materials factories, the Group14 silane factory and the Seoul offices. This is the site-specific `location` custom post type and is the most Group14-particular resource on the surface: it is the company manufacturing footprint as structured data rather than a map graphic. Verified live at 6 published locations on 2026-08-22. Group14 publishes no API documentation; this surface was discovered by probe and derived from the server''s own OPTIONS schema documents.'
+  description: Public, unauthenticated read access to the Group14 Technologies facility records behind group14.technology — the BAM-1, BAM-2 and BAM-3 battery active materials factories, the Group14 silane factory and the Seoul offices.
   contact:
     name: Group14 Technologies
     url: https://group14.technology/contact/

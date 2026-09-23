@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Group14 Technologies Resources API
   version: wp/v2
-  description: Public, unauthenticated read access to the Group14 Technologies resource library behind group14.technology — press releases, news coverage, blog posts and whitepapers about SCC55 silicon battery material and the BAM factory network — plus the resource-category taxonomy that classifies them. Verified live at 169 published resources across 5 categories on 2026-08-22. Group14 publishes no API documentation; this surface was discovered by probe and derived from the server's own OPTIONS schema documents.
+  description: Public, unauthenticated read access to the Group14 Technologies resource library behind group14.technology — press releases, news coverage, blog posts and whitepapers about SCC55 silicon battery material and the BAM factory network — plus the resource-category taxonomy that classifies them.
   contact:
     name: Group14 Technologies
     url: https://group14.technology/contact/
@@ -313,6 +313,26 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          description: Additional context.
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+      required:
+      - code
+      - message
     Resource:
       type: object
       title: resource
@@ -440,23 +460,3 @@ components:
           description: ACF field data
           type: object
           properties: {}
-    Error:
-      type: object
-      description: WordPress REST API error envelope. This is NOT RFC 9457 problem+json; it is served as application/json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error slug, e.g. rest_invalid_param.
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          description: Additional context.
-          properties:
-            status:
-              type: integer
-              description: HTTP status code.
-      required:
-      - code
-      - message

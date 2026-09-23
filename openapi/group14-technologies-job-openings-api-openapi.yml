@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Group14 Technologies Careers Job Openings API
   version: wp/v2
-  description: Public, unauthenticated read access to Group14 Technologies job openings and the department and location vocabularies that classify them — the machine-readable view of the hiring surface at the Woodinville headquarters, the Moses Lake BAM-2 factory and the Sangju, South Korea BAM-3 joint-venture site. Verified live at 4 open roles, 19 departments and 19 job locations on 2026-08-22. Group14 publishes no API documentation; this surface was discovered by probe and derived from the server's own OPTIONS schema documents.
+  description: Public, unauthenticated read access to Group14 Technologies job openings and the department and location vocabularies that classify them — the machine-readable view of the hiring surface at the Woodinville headquarters, the Moses Lake BAM-2 factory and the Sangju, South Korea BAM-3 joint-venture site.
   contact:
     name: Group14 Technologies
     url: https://group14.technology/contact/

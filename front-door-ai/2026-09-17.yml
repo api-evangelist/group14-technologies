@@ -1,0 +1,25 @@
+# Front Door AI Index — group14-technologies — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: group14-technologies
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: group14.technology
+  final_host: group14.technology
+  ownership: own
+  owner: group14-technologies
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 2
+  host_score: 2
+  density: 2.13
+  words: 939
+  tiers:
+    agentic: 0
+    core: 2
+    model: 0
+  ambiguous: 0
+  top_terms:
+    AI: 2
